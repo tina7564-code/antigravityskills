@@ -3,9 +3,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from openai import AsyncOpenAI
-from transformers import pipeline
-
 from app.config import get_settings
 from app.schemas import SentimentResult
 
@@ -36,6 +33,8 @@ class SentimentAnalyzer:
 
     async def _analyze_transformers(self, text: str) -> SentimentResult:
         if self._transformer_pipe is None:
+            from transformers import pipeline
+
             self._transformer_pipe = pipeline('sentiment-analysis')
 
         result = self._transformer_pipe(text[:512])[0]
@@ -54,6 +53,8 @@ class SentimentAnalyzer:
 
     async def _analyze_openai(self, text: str) -> SentimentResult:
         if self._openai_client is None:
+            from openai import AsyncOpenAI
+
             self._openai_client = AsyncOpenAI(api_key=self.settings.openai_api_key)
 
         prompt = (

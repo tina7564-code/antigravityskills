@@ -1,0 +1,4 @@
+# Optional local ML dependencies for SENTIMENT_PROVIDER=transformers
+# Install only when you need on-box inference.
+transformers==4.44.2
+torch==2.4.1

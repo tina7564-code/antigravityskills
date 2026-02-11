@@ -42,15 +42,33 @@
   - 中风险：明显负面
   - 低风险：普通抱怨/轻度负面
 
-## 启动方式
+## Docker 部署（推荐：爪云/Claw Cloud）
 
-1. 复制环境变量：
-   `cp .env.example .env`
-2. Docker 启动：
-   `docker compose up --build`
-3. 服务地址：
-   - API: `http://localhost:8000`
-   - 健康检查: `GET /healthz`
+### 1) 准备配置
+
+```bash
+cp .env.example .env
+```
+
+生产环境至少修改：
+- `WEBHOOK_SECRET`
+- `OPENAI_API_KEY`（如果 `SENTIMENT_PROVIDER=openai`）
+- `SMTP_*` / `WECOM_WEBHOOK_URL`（如果要告警）
+
+### 2) 本地验证
+
+```bash
+docker compose up --build -d
+docker compose ps
+curl http://127.0.0.1:8000/healthz
+```
+
+### 3) 爪云部署要点
+
+- 选择 **Docker Compose** 部署方式，直接上传本仓库。
+- 在平台环境变量中配置 `.env` 中的同名变量。
+- 对外仅暴露 `api` 的 `8000` 端口（`db` 和 `redis` 保持内网）。
+- 如果平台提供托管 PostgreSQL/Redis，可将 `DATABASE_URL`、`REDIS_URL` 改为托管地址，并移除 compose 里的 `db/redis` 服务。
 
 ## 典型 API
 
